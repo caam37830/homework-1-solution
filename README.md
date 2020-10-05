@@ -53,7 +53,7 @@ In this problem, you will implement a library of function classes related by cla
 
 We want this library of functions to behave nicely with NumPy arrays.  The `evaluate` method should be compatible with NumPy element-wise operations.
 
-Put all your code in [`functions.py`](functions.py)
+Put all your class and function definitions in [`functions.py`](functions.py), and use [`answers.ipynb`](answers.ipynb) for written answers, plots, or displaying output of expressions.
 
 ### Part A: Finish the parent class (5 points)
 
@@ -164,12 +164,57 @@ Note that Symbolic functions won't be compatible with the `plot` method defined 
 ## Problem 1
 
 ### Newton's method for root finding
+Implement Newton's method for root finding using the call signature
+```python
+def newton_root(f, x0, tol=1e-8):
+    """
+    find a point x so that f(x) is close to 0,
+    measured by abs(f(x)) < tol
 
-### Newton's method for maximization
+    Use Newton's method starting at point x0
+    """
+```
+The function should assume that `f` is an `AbstractFunction`, and that `x` is a real number.  Put in a type check to verify that `f` is an `AbstractFunction` but it is not `Symbolic`.
 
+Implement this function in `functions.py`
 
+### Newton's method for finding extrema
 
+Implement a function that finds a local extremum for a function using the call signature
+```python
+def newton_extremum(f, x0, tol=1e-8):
+    """
+    find a point x which is close to a local maximum or minimum of f,
+    measured by abs(f'(x)) < tol
 
+    Use Newton's method starting at point x0
+    """
+```
+Again, assume that `f` is an `AbstractFunction`, and `x` is a real number.
+
+Implement this function in `functions.py`
+
+## Problem 2 - Taylor Series
+
+### Part A - add a method to AbstractFunction
+Recall the Taylor series of a function `f` centered at `x0` is the polynomial
+```
+Tf = f(x0) + f'(x0)(x - x0) + 1/2 * f''(x0)(x - x0)**2 + ...
+```
+Add a method `taylor_series` to the `AbstractFunction` base class
+```python
+def taylor_series(self, x0, deg=5):
+    """
+    Returns the Taylor series of f centered at x0 truncated to degree k.
+    """
+```
+The return type should be another `AbstractFunction`.
+
+### Part B - use your Taylor series
+
+Make a plot that displays `sin(x)` as well as its degree-k taylor series for `k in [0,1,3,5]` on the interval `[-3,3]`
+
+Your plot should include labels for each line displayed, as well as a legend.
 
 ## Feedback
 

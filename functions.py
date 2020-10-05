@@ -3,6 +3,7 @@ A library of functions
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import numbers
 
 class AbstractFunction:
     """
@@ -86,6 +87,24 @@ class AbstractFunction:
         return fig
 
 
+    def taylor_series(self, x0, deg=5):
+        """
+        Returns the Taylor series of f centered at x0 truncated to degree k.
+        """
+        Tf = Constant(self(x0))
+        var = Affine(1, -x0) # x - x0
+        fk = self.derivative()
+        fact = 1 # holds factorial(k)
+        for k in range(1,deg+1):
+            fact = fact * k
+            Tf = Tf + Constant(fk(x0) / fact) * var**k
+            fk = fk.derivative() # increase derivative
+
+        return Tf
+
+
+
+
 class Polynomial(AbstractFunction):
     """
     polynomial c_n x^n + ... + c_1 x + c_0
@@ -151,9 +170,15 @@ class Polynomial(AbstractFunction):
         """
         evaluate polynomial at x
         """
-        x = np.array(x)
-        # use vandermonde matrix
-        return np.vander(x, len(self.coeff)).dot(self.coeff)
+        if isinstance(x, numbers.Number):
+            ret = 0
+            for k, c in enumerate(reversed(self.coeff)):
+                ret = ret + c * x**k
+            return ret
+        elif isinstance(x, np.ndarray):
+            x = np.array(x)
+            # use vandermonde matrix
+            return np.vander(x, len(self.coeff)).dot(self.coeff)
 
 
     def derivative(self):
@@ -374,7 +399,7 @@ class Cos(AbstractFunction):
         return "Cos()"
 
     def derivative(self):
-        return Scale(-1)(Sin())
+        return Constant(-1) * Sin()
 
     def evaluate(self, x):
         return np.cos(x)
@@ -419,3 +444,35 @@ class Symbolic(AbstractFunction):
     # product rule (f*g)' = f'*g + f*g'
     def derivative(self):
         return Symbolic(self.name + "'")
+
+
+def newton_root(f, x0, tol=1e-8):
+    """
+    find a point x so that f(x) is close to 0,
+    measured by abs(f(x)) < tol
+
+    Use Newton's method starting at point x0
+    """
+    if not isinstance(f, AbstractFunction):
+        raise AssertionError("f must be an AbstractFunction")
+    if isinstance(f, Symbolic):
+        raise AssertionError("f can not be Symbolic")
+
+    f1 = f.derivative()
+    x = x0
+    fx = f(x)
+    while abs(fx) > tol:
+        x = x - fx / f1(x)
+        fx = f(x)
+
+    return x
+
+
+def newton_extremum(f, x0, tol=1e-8):
+    """
+    find a point x which is close to a local maximum or minimum of f,
+    measured by abs(f'(x)) < tol
+
+    Use Newton's method starting at point x0
+    """
+    return newton_root(f.derivative(), x0)
