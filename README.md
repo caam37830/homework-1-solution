@@ -8,7 +8,7 @@ conda install --file requirements.txt
 ```
 to install the packages in [`requirements.txt`](requirements.txt)
 
-Please put plots and written answers in the Jupyter notebook `answers.ipynb`(answers.ipynb)
+Please put plots and written answers in the Jupyter notebook [`answers.ipynb`](answers.ipynb)
 
 ## Important Information
 
@@ -178,6 +178,8 @@ The function should assume that `f` is an `AbstractFunction`, and that `x` is a 
 
 Implement this function in `functions.py`
 
+Find a root of `sin(exp(x))` starting at `x0=1.0`. Make a plot of `sin(exp(x))` and visualize the root using `plt.scatter`.
+
 ### Newton's method for finding extrema
 
 Implement a function that finds a local extremum for a function using the call signature
@@ -193,6 +195,8 @@ def newton_extremum(f, x0, tol=1e-8):
 Again, assume that `f` is an `AbstractFunction`, and `x` is a real number.
 
 Implement this function in `functions.py`
+
+Find a minimum or maximum of `sin(exp(x))` starting at `x0=0.0`. Make a plot of `sin(exp(x))` and visualize the extremum using `plt.scatter`.
 
 ## Problem 2 - Taylor Series
 
