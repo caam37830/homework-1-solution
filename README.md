@@ -8,6 +8,8 @@ conda install --file requirements.txt
 ```
 to install the packages in [`requirements.txt`](requirements.txt)
 
+Please put plots and written answers in the Jupyter notebook `answers.ipynb`(answers.ipynb)
+
 ## Important Information
 
 ### Due Date
@@ -53,7 +55,7 @@ We want this library of functions to behave nicely with NumPy arrays.  The `eval
 
 Put all your code in [`functions.py`](functions.py)
 
-### Finish the parent class (5 points)
+### Part A: Finish the parent class (5 points)
 
 The parent class for this library is `AbstractFunction`.  Implement
 Complete the `plot` method in this class.  You should return the output of the `plot` function in PyPlot.
@@ -73,9 +75,17 @@ Some additional notes on methods which will be defined in child classes:
 
 The `__call__` method allows you to use an object as a function in Python.  For example, if `f` is some derived class of `AbstractFunction`, `f(x)` will use the `__call__` method.  You can see that this method does different things depending on what the type of `x` is.
 
-### Implement Scale and Constant functions (5 points)
+Test your function by plotting `5*x^2 + 3*x + 1` using the provided Polynomial class
+```python
+p = Polynomial(5,3,1)
+p.plot(color='red')
+```
+
+### Part B: Implement Scale and Constant functions (5 points)
 
 A class for Polynomial functions, named `Polynomial` has been provided in `functions.py`.  This is more complex than anything you'll need to do.
+
+When implementing derived classes, you can access methods of the parent class (even as you specialize them) using `super()`.  See the definition of `Affine` for an example of how we can implement the `__init__` method for functions of the form `a*x + b` using the `__init__` method of `Polynomial`.
 
 Implement classes `Scale` and `Constant` as child classes of `Polynomial`.  You should only need to implement the`__init__` method for both classes.
 
@@ -83,7 +93,9 @@ Implement classes `Scale` and `Constant` as child classes of `Polynomial`.  You 
 
 `Constant(c)` should be equivalent to the polynomial `c`
 
-### Implement Compose, Product, and Sum functions (20 points)
+Make plots of `Scale(2)` and `Constant(1)` using the `plot` method.
+
+### Part C: Implement Compose, Product, and Sum functions (20 points)
 
 Implement child classes of `AbstractFunction`:
 1. `Compose`, where `Compose(f, g)(x)` acts as `f(g(x))`
@@ -100,7 +112,7 @@ You should provide implementations for:
 When implementing `__str__`, place `{0}` where indeterminates in the function would go.
 You can look at the implementation of `Polynomial` for examples of this.  If you call the `format` method on the string, you need to escape the sequence (so it isn't formatted), by enclosing in an extra set of braces: `"{{0}}"`
 
-### Implement Power (and some other functions) (20 points)
+### Part D: Implement Power (and some other functions) (20 points)
 
 Implement additional classes of `AbstractFunction`
 1. `Power`: `Power(n)(x)` acts as `x**n` (n can be negative, or non-integer)
@@ -119,8 +131,34 @@ You should provide implementations for:
 When implementing `__str__`, place `{0}` where indeterminates in the function would go.
 You can look at the implementation of `Polynomial` for examples of this.
 
+Make plots of `Sin()`, `Cos()`, and `Exponential()`.
 
-### Symbolic Functions
+
+### Part E: Symbolic Functions
+
+Implement a class for symbolic functions.  The data for a symbolic function is a string, which is the name of the function.  For example, we should be able to define a symbolic function
+```python
+f = Symbolic('f')
+```
+The string method should output:
+```python
+str(f)
+"f({0})"
+```
+The evaluate method should just print a string with whatever the input is, so when the `__call__` method is used, we have
+```python
+f(5)
+"f(5)"
+```
+The derivative method should add an apostrophe to the end of the name:
+```python
+f.derivative()
+Symbolic("f'")
+```
+
+Note that Symbolic functions won't be compatible with the `plot` method defined in the `AbstractFunction` class.
+
+### Part F: Use the Module
 
 
 ## Problem 1

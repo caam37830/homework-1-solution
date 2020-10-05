@@ -81,7 +81,9 @@ class AbstractFunction:
         plots function on values
         pass kwargs to plotting function
         """
-        raise NotImplementedError("plot")
+        y = self.evaluate(vals)
+        fig = plt.plot(vals, y, **kwargs)
+        return fig
 
 
 class Polynomial(AbstractFunction):
@@ -100,7 +102,7 @@ class Polynomial(AbstractFunction):
 
 
     def __repr__(self):
-        return "Polynomial{}".format(tuple(*coeff))
+        return "Polynomial{}".format(tuple(self.coeff))
 
 
     def __str__(self):
@@ -192,3 +194,228 @@ class Polynomial(AbstractFunction):
             return Polynomial(*np.polymul(self.coeff, other.coeff))
         else:
             return super().__mul__(other)
+
+
+class Affine(Polynomial):
+    """
+    affine function a * x + b
+    """
+    def __init__(self, a, b):
+        super().__init__(a, b)
+
+
+## Implement Scale and Polynomial
+class Scale(Polynomial):
+    def __init__(self, a):
+        super().__init__(a, 0)
+
+
+class Constant(Polynomial):
+    def __init__(self, c):
+        super().__init__(c)
+
+
+## Implement Compose, Product, and Sum
+class Sum(AbstractFunction):
+    """
+    f + g
+    """
+    def __init__(self, f, g):
+        if isinstance(f, AbstractFunction) and isinstance(g, AbstractFunction):
+            self.f = f
+            self.g = g
+        else:
+            raise AssertionError("must input AbstractFunction functions")
+
+    def __str__(self):
+        return "{} + {}".format(self.f, self.g)
+
+    def __repr__(self):
+        return "Sum({}, {})".format(self.f.__repr__(), self.g.__repr__())
+
+    def evaluate(self, x):
+        return self.f(x) + self.g(x)
+
+    def derivative(self):
+        return Sum(self.f.derivative(), self.g.derivative())
+
+
+class Product(AbstractFunction):
+    """
+    f * g
+    """
+    def __init__(self, f, g):
+        if isinstance(f, AbstractFunction) and isinstance(g, AbstractFunction):
+            self.f = f
+            self.g = g
+        else:
+            raise AssertionError("must input AbstractFunction functions")
+
+    def __str__(self):
+        return "({}) * ({})".format(self.f, self.g)
+
+    def __repr__(self):
+        return "Product({}, {})".format(self.f.__repr__(), self.g.__repr__())
+
+    def evaluate(self, x):
+        return self.f(x) * self.g(x)
+
+    def derivative(self):
+        # product rule
+        return self.f.derivative() * self.g + self.f * self.g.derivative()
+
+
+class Compose(AbstractFunction):
+    """
+    composition of functions f \circ g
+    """
+
+    def __init__(self, f, g):
+        if isinstance(f, AbstractFunction) and isinstance(g, AbstractFunction):
+            self.f = f
+            self.g = g
+        else:
+            raise AssertionError("must input AbstractFunction functions")
+
+    def __str__(self):
+        return "{}".format(self.f).format(self.g)
+
+    def __repr__(self):
+        return "Compose({}, {})".format(self.f.__repr__(), self.g.__repr__())
+
+    def evaluate(self, x):
+        return self.f(self.g(x))
+
+    def derivative(self):
+        # chain rule
+        return self.g.derivative() * self.f.derivative()(self.g)
+
+
+## Implement Power, Log, Exponential, Sin, Cos
+class Power(AbstractFunction):
+    """
+    function x^n
+
+    n can be negative or non-integer
+    """
+
+    def __init__(self, n):
+        self.n = n
+
+    def __str__(self):
+        return "({{0}})^{}".format(self.n)
+
+    def __repr__(self):
+        return "Power({})".format(self.n)
+
+    def derivative(self):
+        return Scale(self.n)(Power(self.n-1))
+
+    def evaluate(self, x):
+        return np.power(x, self.n)
+
+
+
+class Exponential(AbstractFunction):
+    """
+    function exp(x)
+    """
+
+    def __init__(self):
+        # nothing to do
+        return
+
+    def __str__(self):
+        return "exp({0})"
+
+    def __repr__(self):
+        return "Exponential()"
+
+    def derivative(self):
+        return Exponential()
+
+    def evaluate(self, x):
+        return np.exp(x)
+
+
+class Sin(AbstractFunction):
+    """
+    function sin(x)
+    """
+
+    def __init__(self):
+        return
+
+    def __str__(self):
+        return "sin({0})"
+
+    def __repr__(self):
+        return "Sin()"
+
+    def derivative(self):
+        return Cos()
+
+    def evaluate(self, x):
+        return np.sin(x)
+
+
+class Cos(AbstractFunction):
+    """
+    function cos(x)
+    """
+
+    def __init__(self):
+        return
+
+    def __str__(self):
+        return "cos({0})"
+
+    def __repr__(self):
+        return "Cos()"
+
+    def derivative(self):
+        return Scale(-1)(Sin())
+
+    def evaluate(self, x):
+        return np.cos(x)
+
+
+class Log(AbstractFunction):
+    """
+    function log(x)
+    """
+    def __init__(self):
+        return
+
+    def __str__(self):
+        return "log({0})"
+
+    def __repr__(self):
+        return "Log()"
+
+    def derivative(self):
+        return Power(-1)
+
+    def evaluate(self, x):
+        return np.log(x)
+
+
+class Symbolic(AbstractFunction):
+    def __init__(self, name):
+        if isinstance(name, str):
+            self.name=name
+        else:
+            raise AssertionError("name must be string")
+
+    def __str__(self):
+        return self.name + "({0})"
+
+    def __repr__(self):
+        return "Symbolic({})".format(self.name)
+
+    def evaluate(self, x):
+        return self.name + "({0})".format(x)
+
+    # product rule (f*g)' = f'*g + f*g'
+    def derivative(self):
+        return Symbolic(self.name + "'")
