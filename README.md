@@ -15,6 +15,16 @@ Please put plots and written answers in the Jupyter notebook [`answers.ipynb`](a
 ### Due Date
 This assignment is due Friday, October 16 at 12pm (noon) Chicago time.
 
+You should make sure you have pushed your completed repository to GitHub by this time.
+
+
+### Group Assignment
+
+This is a group assignment.  You will share a `git` repository, and work will be shared.  Evaluation will be done on the group repository, but everyone should understand the code and answers.  You can (and should) look at code that any group member writes and look for ways to improve it, for example, by adding comments, improving docstrings, or catching bugs. You can talk to people in other groups, but shouldn't share code/answers.
+
+You should communicate with your group early on to discuss who will do what, and check in regularly to make sure work is being completed.  You may wish to video chat or use Slack to troubleshoot or debug together.  It is perfectly fine to write code collectively e.g. get on video and "pair program".  Work should be divided roughly equally, and you'll be asked to say who was primarily responsible for what (you don't have to be super detailed).
+
+If you having trouble communicating with members of your group e.g. someone is just not responding to emails at all, please let the course staff know.  In extreme cases, group members may be re-assigned.
 
 ### Grading Rubric
 
@@ -22,12 +32,19 @@ The following rubric will be used for grading.
 
 |   | Autograder | Correctness | Style | Total |
 |:-:|:-:|:-:|:-:|:-:|
-| Survey    |   | /10 | /0 |  /10 |
-| Problem 0 |   | /8  | /2  |  /10 |
-| Problem 1 | /5 | /10  | /5  | /20 |
-| Problem 2 | /10 | /12  | /3  | /25 |
-| Problem 3 | /5 | /12  | /3  | /20 |
-| Problem 4 |   |  /10 | /5  | /15 |
+| Problem 0 |   |   |   |  /55 |
+| Part A    |    |  /3   | /2  |  /5 |
+| Part B    | /2 |  /2   | /1  |  /5 |
+| Part C    | /6 |  /7   | /2  |  /15 |
+| Part D    | /5 |  /7   | /3  |  /15 |
+| Part E    | /2 |  /2   | /1  |  /10 |
+| Part F    |    |  /5   |     |  /5 |
+| Problem 1 |   |   |   | /25 |
+| Part A    | /3 |  /8   | /4  |  /15 |
+| Part B    | /2 |  /6   | /2  |  /10 |
+| Problem 2 |   |  |   | /20 |
+| Part A    | /4  |  /4   | /2  |  /10 |
+| Part B    |   |  /8   | /2  |  /10 |
 
 Correctness will be based on code (i.e. did you provide was was asked for) and the content of [`answers.md`](answers.md).
 
@@ -95,7 +112,7 @@ Implement classes `Scale` and `Constant` as child classes of `Polynomial`.  You 
 
 Make plots of `Scale(2)` and `Constant(1)` using the `plot` method.
 
-### Part C: Implement Compose, Product, and Sum functions (20 points)
+### Part C: Implement Compose, Product, and Sum functions (15 points)
 
 Implement child classes of `AbstractFunction`:
 1. `Compose`, where `Compose(f, g)(x)` acts as `f(g(x))`
@@ -112,7 +129,9 @@ You should provide implementations for:
 When implementing `__str__`, place `{0}` where indeterminates in the function would go.
 You can look at the implementation of `Polynomial` for examples of this.  If you call the `format` method on the string, you need to escape the sequence (so it isn't formatted), by enclosing in an extra set of braces: `"{{0}}"`
 
-### Part D: Implement Power (and some other functions) (20 points)
+Make a plot of `Compose(Polynomial(1,0,0), Polynomial(1,0,0))`.  What is the equivalent function expressed as a `Polynomial`?
+
+### Part D: Implement Power (and some other functions) (15 points)
 
 Implement additional classes of `AbstractFunction`
 1. `Power`: `Power(n)(x)` acts as `x**n` (n can be negative, or non-integer)
@@ -131,10 +150,10 @@ You should provide implementations for:
 When implementing `__str__`, place `{0}` where indeterminates in the function would go.
 You can look at the implementation of `Polynomial` for examples of this.
 
-Make plots of `Sin()`, `Cos()`, and `Exponential()`.
+Make plots of each of these functions (for Power, use `Power(-1)`) - you may need to adjust the domain of your plot function using the `vals` argument.
 
 
-### Part E: Symbolic Functions
+### Part E: Symbolic Functions (10 points)
 
 Implement a class for symbolic functions.  The data for a symbolic function is a string, which is the name of the function.  For example, we should be able to define a symbolic function
 ```python
@@ -158,12 +177,21 @@ Symbolic("f'")
 
 Note that Symbolic functions won't be compatible with the `plot` method defined in the `AbstractFunction` class.
 
-### Part F: Use the Module
+In `answers.ipynb`, take the derivative of the produce of two symbolic functions to get an expression for product rule.
+
+### Part F: Use the Module (5 points)
+
+Use the module you just wrote to answer the following questions.
+
+1. What is the derivative of `5x^2 + 3x + 1`?
+2. Derive a rule for the derivative of $f = g/h$ using symbolic functions.  Does this reduce to quotient rule?
+3. What is the derivative of `sin(x)**2`?
+4. What is the second derivative of `exp(5*x)`?
 
 
-## Problem 1
+## Problem 1 (25 points)
 
-### Newton's method for root finding
+### Part A: Newton's method for root finding (15 points)
 Implement Newton's method for root finding using the call signature
 ```python
 def newton_root(f, x0, tol=1e-8):
@@ -178,9 +206,9 @@ The function should assume that `f` is an `AbstractFunction`, and that `x` is a 
 
 Implement this function in `functions.py`
 
-Find a root of `sin(exp(x))` starting at `x0=1.0`. Make a plot of `sin(exp(x))` and visualize the root using `plt.scatter`.
+Find a root of `sin(exp(x))` starting at `x0=1.0`. Make a plot of `sin(exp(x))` and visualize the root using `plt.scatter` on the same plot.
 
-### Newton's method for finding extrema
+### Part B: Newton's method for finding extrema (10 points)
 
 Newton's method can also be used to find a local extremum (maximum or minimum) of a function.  The observation is that `f` is at a local maximum or minimum if its derivative is zero (we'll assume that the second derivative is non-zero which avoids some potential problems).  Thus, finding roots of a derivative finds maxima or minima of a function.
 
@@ -200,9 +228,9 @@ Implement this function in `functions.py`
 
 Find a minimum or maximum of `sin(exp(x))` starting at `x0=0.0`. Make a plot of `sin(exp(x))` and visualize the extremum using `plt.scatter`.
 
-## Problem 2 - Taylor Series
+## Problem 2 - Taylor Series (20 points)
 
-### Part A - add a method to AbstractFunction
+### Part A - add a method to AbstractFunction (10 points)
 Recall the Taylor series of a function `f` centered at `x0` is the polynomial
 ```
 Tf = f(x0) + f'(x0)(x - x0) + 1/2 * f''(x0)(x - x0)**2 + ...
@@ -216,7 +244,7 @@ def taylor_series(self, x0, deg=5):
 ```
 The return type should be another `AbstractFunction`.
 
-### Part B - use your Taylor series
+### Part B - use your Taylor series (10 points)
 
 Make a plot that displays `sin(x)` as well as its degree-k taylor series for `k in [0,1,3,5]` on the interval `[-3,3]`
 
