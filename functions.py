@@ -292,7 +292,7 @@ class Product(AbstractFunction):
 
 class Compose(AbstractFunction):
     """
-    composition of functions f \circ g
+    composition of functions f \\circ g
     """
 
     def __init__(self, f, g):
