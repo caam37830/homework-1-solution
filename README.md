@@ -182,6 +182,8 @@ Find a root of `sin(exp(x))` starting at `x0=1.0`. Make a plot of `sin(exp(x))` 
 
 ### Newton's method for finding extrema
 
+Newton's method can also be used to find a local extremum (maximum or minimum) of a function.  The observation is that `f` is at a local maximum or minimum if its derivative is zero (we'll assume that the second derivative is non-zero which avoids some potential problems).  Thus, finding roots of a derivative finds maxima or minima of a function.
+
 Implement a function that finds a local extremum for a function using the call signature
 ```python
 def newton_extremum(f, x0, tol=1e-8):
