@@ -30,15 +30,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest test.py
-    - name: Print survey
-      run: |
-        python survey.py
-    - name: run fizzbuzz
-      run: |
-        python fizzbuzz.py
-    - name: run fibonacci
-      run: |
-        python fibonacci.py
-    - name: run egyptian
-      run: |
-        python egyptian.py
